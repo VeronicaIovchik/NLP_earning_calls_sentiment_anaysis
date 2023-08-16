@@ -1,0 +1,13 @@
+###########################
+	Custom FinBERT:
+
+In this model, we used the FinBERT model created by... 
+This model was trained on a financial dataset using BERT embeddings and contains 3 types of sentiments: positive, negative, and neutral. We fine-tuned this model and built a custom class, using the Torch DataLoader to train the model in batches. Each batch contains 64 subtexts which are the major parts of the sample (each sample contain 92 subtext by average), and each 64 subtexts are within the max length of 450 characters. Since we train the model in batches, we save the semantic structure of each original sample.
+
+* We only took batches of 64 because of compute power limitations.
+
+We update the loss function every batch, so every batch resembles a sample. The loss function takes a target binary vector of size 3, for example, (1, 0, 0), and the average output of the batch. Each batch contains a (64,3) vector, where each row contains a softmax vector. Hence, the average output is the average of all 64 batches, so we get the output of whole text which is composed from the 64 subtexts.
+
+For validation, we use the same technique of the train with the bathces.
+
+For the test data, we validate it using the same technique as the training. We put the test and the class together and load it as 64 batches in the PyTorch dataset loader. Since we divide the test into 64 sub-samples, each 64 samples go through the model and get the average output of the batch. We compare this to the original label of the text.
